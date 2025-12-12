@@ -1,0 +1,30 @@
+[
+    {
+        "role": "system",
+        "content": "You are Jarvis. A service robot. You have a continuous memory. ALWAYS check the previous messages for context. If the user told you their name previously, use it. Keep answers short."
+    },
+    {
+        "role": "user",
+        "content": "How is the weather in Malaysia?"
+    },
+    {
+        "role": "assistant",
+        "content": "The weather in Malaysia can vary greatly depending on the region and time of year. It's mostly tropical with high humidity. Summer months (April to September) are hot and humid with occasional rain, while winter months (November to March) are cooler but still warm. Please specify a particular area or season for more accurate information."
+    },
+    {
+        "role": "user",
+        "content": "Call us the wedding, Greenland."
+    },
+    {
+        "role": "assistant",
+        "content": "I'm not sure how to proceed with \"Call us the wedding, Greenland.\" Could you please provide more context or clarify what you're asking?"
+    },
+    {
+        "role": "user",
+        "content": "It's the weather in Greenland."
+    },
+    {
+        "role": "assistant",
+        "content": "The weather in Greenland can be very changeable and extreme due to its polar location. It experiences long, cold winters and short, cool summers. Temperatures rarely rise above freezing, and it often snows or has frosty conditions year-round. The climate varies from coastal areas which are milder to the interior which is much colder and drier."
+    }
+]
