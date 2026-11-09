@@ -1,0 +1,9 @@
+# Runtime guest records and conversation history may contain personal data.
+task_1/guest_records.json
+speech/memory.json
+vision/guest_reid_lab_gallery.json
+vision/receptionist_vision_tuning.json
+
+# Python runtime artifacts.
+__pycache__/
+*.py[cod]
