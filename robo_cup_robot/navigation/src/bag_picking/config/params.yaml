@@ -1,0 +1,31 @@
+bag_locator:
+  ros__parameters:
+    model_path: "/home/alson_wong/models/best.pt"   # CHANGE: your trained YOLO v11 weights
+    target_class: "paperbag"                         # use an IR-trained model; CHANGE if your model calls it something else (printed at startup)
+    confidence: 0.5
+    device: "cuda:0"                                 # "cpu" if the GPU is not available in WSL
+    image_topic: "/camera/ir/image_raw"              # Dabai DW has no colour camera: detect on the IR image
+    depth_topic: "/camera/depth/image_raw"           # same sensor as IR, so pixels line up
+    camera_info_topic: "/camera/depth/camera_info"
+    target_frame: "base_link"
+    grasp_v_fraction: 0.25                           # where on the bag to grab: 0 = top edge of the box, 1 = bottom
+    patch_size: 15
+    max_rate: 10.0
+
+bag_picker:
+  ros__parameters:
+    arm_group: "arm"
+    gripper_group: "gripper"                         # CHANGE if your SRDF names the gripper group differently
+    base_link: "base_link"
+    tool_link: "link_5"
+    tcp_offset: 0.085                                # MEASURE: link_5 origin to the middle of the fingertips, metres
+    look_joints: [0.05, 0.35, -1.20, 1.49, -1.52]    # SET: joint angles where the camera looks at the table
+    gripper_open: 0.04
+    gripper_closed: 0.002
+    approach_height: 0.10
+    lift_height: 0.10
+    grasp_z_offset: 0.0
+    detections_to_average: 5
+    detection_timeout: 4.0
+    max_velocity: 0.2
+    max_acceleration: 0.2

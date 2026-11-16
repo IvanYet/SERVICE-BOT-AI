@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="orbbec_embedded_s" params="parent_link *origin">
+
+    <joint name="camera_joint" type="fixed">
+      <xacro:insert_block name="origin" />
+      <parent link="${parent_link}"/>
+      <child link="camera_link"/>
+    </joint>
+
+    <link name="camera_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.015 0.069 0.023"/>
+        </geometry>
+        <material name="black"/>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.015 0.069 0.023"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="0.03"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <inertia ixx="0.00001" ixy="0" ixz="0" iyy="0.00001" iyz="0" izz="0.00001"/>
+      </inertial>
+    </link>
+
+    <!-- ROS optical frame -->
+    <link name="camera_optical_link"/>
+    <joint name="camera_optical_joint" type="fixed">
+      <parent link="camera_link"/>
+      <child link="camera_optical_link"/>
+      <origin xyz="0 0 0" rpy="-1.570796 0 -1.570796"/>
+    </joint>
+
+    <!-- Gazebo sensor plugin -->
+    <gazebo reference="camera_link">
+      <sensor type="depth" name="orbbec_embedded_s">
+        <update_rate>30.0</update_rate>
+        <camera name="orbbec_camera">
+          <horizontal_fov>1.18508</horizontal_fov>
+          <image>
+            <width>640</width>
+            <height>400</height>
+            <format>R8G8B8</format>
+          </image>
+          <clip>
+            <near>0.25</near>
+            <far>1.50</far>
+          </clip>
+        </camera>
+
+        <plugin name="orbbec_driver" filename="libgazebo_ros_camera.so">
+          <ros>
+            <namespace>/camera</namespace>
+            <remapping>custom_camera/image_raw:=color/image_raw</remapping>
+            <remapping>custom_camera/image_depth:=depth/image_raw</remapping>
+            <remapping>custom_camera/points:=points</remapping>
+          </ros>
+          <frame_name>camera_optical_link</frame_name>
+          <min_depth>0.25</min_depth>
+          <max_depth>1.50</max_depth>
+        </plugin>
+      </sensor>
+    </gazebo>
+
+  </xacro:macro>
+</robot>

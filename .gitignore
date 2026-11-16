@@ -1,0 +1,20 @@
+# ROS 2 Build / Output Directories (NEVER push these!)
+build/
+install/
+log/
+.colcon/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Temporary / Swap / Editor files
+*.swp
+*~
+.vscode/
+.idea/
+
+# Gazebo logs and temp files
+*.log
+/tmp/

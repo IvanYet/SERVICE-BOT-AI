@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot name="final_robot">
+
+    <!-- ======================================================= -->
+    <!-- PLANNING GROUPS                                         -->
+    <!-- ======================================================= -->
+    <!-- Group 1: The 5-DOF Arm -->
+    <group name="arm">
+        <link name="arm_base_link"/>
+        <link name="link_1"/>
+        <link name="link_2"/>
+        <link name="link_3"/>
+        <link name="link_4"/>
+        <link name="link_5"/>
+        <link name="gripper_base"/>
+        <joint name="base_joint"/>
+        <joint name="joint_1"/>
+        <joint name="joint_2"/>
+        <joint name="joint_3"/>
+        <joint name="joint_4"/>
+    </group>
+
+    <!-- Group 2: The Gripper -->
+    <group name="gripper">
+        <link name="left_finger"/>
+        <link name="right_finger"/>
+        <joint name="left_finger_joint"/>
+    </group>
+
+    <!-- ======================================================= -->
+    <!-- GROUP STATES (Pre-set Poses)                            -->
+    <!-- ======================================================= -->
+    <group_state name="home" group="arm">
+        <joint name="base_joint" value="1.57"/>
+        <joint name="joint_1" value="0.15"/>
+        <joint name="joint_2" value="-1.25"/>
+        <joint name="joint_3" value="-1.54"/>
+        <joint name="joint_4" value="0.0"/>
+    </group_state>
+
+    <group_state name="ready" group="arm">
+        <joint name="base_joint" value="1.57"/>
+        <joint name="joint_1" value="0.0"/>
+        <joint name="joint_2" value="0.50"/>
+        <joint name="joint_3" value="0.50"/>
+        <joint name="joint_4" value="0.0"/>
+    </group_state>
+
+    <group_state name="gripper_open" group="gripper">
+        <joint name="left_finger_joint" value="0.04"/>
+    </group_state>
+
+    <group_state name="gripper_closed" group="gripper">
+        <joint name="left_finger_joint" value="0.0"/>
+    </group_state>
+
+    <!-- ======================================================= -->
+    <!-- END EFFECTOR                                            -->
+    <!-- ======================================================= -->
+    <end_effector name="hand" parent_link="link_5" group="gripper" parent_group="arm"/>
+
+    <!-- ======================================================= -->
+    <!-- VIRTUAL JOINT (World to Mobile Base)                    -->
+    <!-- ======================================================= -->
+    <virtual_joint name="virtual_joint" type="fixed" parent_frame="world" child_link="base_footprint"/>
+
+    <!-- ======================================================= -->
+    <!-- DISABLE COLLISIONS: MOBILE BASE & MOUNTING PLATE        -->
+    <!-- ======================================================= -->
+    <!-- Arm bolted to Chassis -->
+    <disable_collisions link1="arm_base_link" link2="chassis" reason="Adjacent"/>
+    <disable_collisions link1="arm_base_link" link2="base_link" reason="Never"/>
+    <disable_collisions link1="arm_base_link" link2="base_footprint" reason="Never"/>
+    <disable_collisions link1="arm_base_link" link2="lidar_link" reason="Never"/>
+    <disable_collisions link1="arm_base_link" link2="left_wheel" reason="Never"/>
+    <disable_collisions link1="arm_base_link" link2="right_wheel" reason="Never"/>
+    <disable_collisions link1="arm_base_link" link2="left_caster" reason="Never"/>
+    <disable_collisions link1="arm_base_link" link2="right_caster" reason="Never"/>
+
+    <!-- Base structural links -->
+    <disable_collisions link1="chassis" link2="base_link" reason="Adjacent"/>
+    <disable_collisions link1="chassis" link2="base_footprint" reason="Adjacent"/>
+    <disable_collisions link1="chassis" link2="lidar_link" reason="Adjacent"/>
+    <disable_collisions link1="chassis" link2="imu_link" reason="Adjacent"/>
+    <disable_collisions link1="chassis" link2="left_wheel" reason="Adjacent"/>
+    <disable_collisions link1="chassis" link2="right_wheel" reason="Adjacent"/>
+    <disable_collisions link1="chassis" link2="left_caster" reason="Adjacent"/>
+    <disable_collisions link1="chassis" link2="right_caster" reason="Adjacent"/>
+    <disable_collisions link1="base_link" link2="left_wheel" reason="Adjacent"/>
+    <disable_collisions link1="base_link" link2="right_wheel" reason="Adjacent"/>
+    <disable_collisions link1="base_link" link2="left_caster" reason="Adjacent"/>
+    <disable_collisions link1="base_link" link2="right_caster" reason="Adjacent"/>
+    <disable_collisions link1="left_wheel" link2="right_wheel" reason="Never"/>
+    <disable_collisions link1="left_caster" link2="right_caster" reason="Never"/>
+
+    <!-- ======================================================= -->
+    <!-- DISABLE COLLISIONS: ARM LINKS                           -->
+    <!-- ======================================================= -->
+    <disable_collisions link1="arm_base_link" link2="link_1" reason="Adjacent"/>
+    <disable_collisions link1="arm_base_link" link2="link_2" reason="Never"/>
+    <disable_collisions link1="link_1" link2="link_2" reason="Adjacent"/>
+    <disable_collisions link1="link_2" link2="link_3" reason="Adjacent"/>
+    <disable_collisions link1="link_2" link2="right_finger" reason="Never"/>
+    <disable_collisions link1="link_3" link2="link_4" reason="Adjacent"/>
+    <disable_collisions link1="link_3" link2="link_5" reason="Never"/>
+    <disable_collisions link1="link_3" link2="right_finger" reason="Never"/>
+    <disable_collisions link1="link_4" link2="link_5" reason="Adjacent"/>
+    <disable_collisions link1="link_4" link2="right_finger" reason="Never"/>
+    <disable_collisions link1="link_5" link2="right_finger" reason="Never"/>
+    <disable_collisions link1="link_5" link2="gripper_base" reason="Adjacent"/>
+
+    <!-- Gripper parts -->
+    <disable_collisions link1="gripper_base" link2="left_finger" reason="Adjacent"/>
+    <disable_collisions link1="gripper_base" link2="right_finger" reason="Adjacent"/>
+    <disable_collisions link1="gripper_base" link2="link_3" reason="Never"/>
+    <disable_collisions link1="gripper_base" link2="link_4" reason="Never"/>
+    <disable_collisions link1="left_finger" link2="link_2" reason="Never"/>
+    <disable_collisions link1="left_finger" link2="link_3" reason="Never"/>
+    <disable_collisions link1="left_finger" link2="link_4" reason="Never"/>
+    <disable_collisions link1="left_finger" link2="link_5" reason="Never"/>
+    <disable_collisions link1="left_finger" link2="right_finger" reason="Default"/>
+
+    <!-- Camera mount on gripper -->
+    <disable_collisions link1="camera_link" link2="gripper_base" reason="Adjacent"/>
+    <disable_collisions link1="camera_link" link2="link_5" reason="Never"/>
+    <disable_collisions link1="camera_link" link2="left_finger" reason="Never"/>
+    <disable_collisions link1="camera_link" link2="right_finger" reason="Never"/>
+
+</robot>

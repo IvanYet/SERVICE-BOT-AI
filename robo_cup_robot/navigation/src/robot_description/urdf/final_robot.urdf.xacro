@@ -1,0 +1,802 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="final_robot">
+
+  <!-- ======================================================= -->
+  <!-- MATERIALS                                               -->
+  <!-- ======================================================= -->
+  <material name="white"><color rgba="0.9 0.9 0.9 1.0"/></material>
+  <material name="black"><color rgba="0.1 0.1 0.1 1.0"/></material>
+  <material name="red"><color rgba="0.8 0.1 0.1 1.0"/></material>
+  <material name="blue"><color rgba="0.2 0.2 0.8 1.0"/></material>
+  <material name="green"><color rgba="0.0 1.0 0.0 1.0"/></material>
+
+  <!-- ======================================================= -->
+  <!-- PART 1: MOBILE VEHICLE BASE                             -->
+  <!-- ======================================================= -->
+  <link name="base_footprint"/>
+
+  <joint name="base_footprint_joint" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <link name="base_link"/>
+
+  <!-- CHASSIS -->
+  <link name="chassis">
+    <visual>
+      <origin xyz="0 0 0" rpy="1.57 0 1.57"/>
+      <geometry>
+        <mesh filename="package://robot_description/meshes/base_robot.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <!-- FIXED: Raised in Z (z=0.05) to clear the top of the wheels and prevent collision repulsion -->
+    <collision>
+      <origin xyz="0 0 0.05" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.38 0.38 0.08"/>
+      </geometry>
+    </collision> 
+    <inertial>
+      <mass value="20.0"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="0.25133" ixy="0.0" ixz="0.0" iyy="0.25133" iyz="0.0" izz="0.481333"/>
+    </inertial>
+  </link>
+
+  <joint name="chassis_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="chassis"/>
+    <origin xyz="0 0 0.13" rpy="0 0 0"/>
+  </joint>
+
+  <!-- REAR/LEFT CASTER CONTACT POINT -->
+  <link name="caster_1">
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius="0.025"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="0.00001" ixy="0.0" ixz="0.0" iyy="0.00001" iyz="0.0" izz="0.00001"/>
+    </inertial>
+  </link>
+
+  <joint name="caster_1_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="caster_1"/>
+    <origin xyz="-0.09 0.125 0.025" rpy="0 0 0"/>
+  </joint>
+
+  <gazebo reference="caster_1">
+    <mu1>0.001</mu1>
+    <mu2>0.001</mu2>
+  </gazebo>
+
+  <!-- REAR/RIGHT CASTER CONTACT POINT -->
+  <link name="caster_2">
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius="0.025"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="0.00001" ixy="0.0" ixz="0.0" iyy="0.00001" iyz="0.0" izz="0.00001"/>
+    </inertial>
+  </link>
+
+  <joint name="caster_2_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="caster_2"/>
+    <origin xyz="-0.09 -0.125 0.025" rpy="0 0 0"/>
+  </joint>
+
+  <gazebo reference="caster_2">
+    <mu1>0.001</mu1>
+    <mu2>0.001</mu2>
+  </gazebo>
+
+  
+ <!-- LEFT HUB WHEEL -->
+  <link name="left_wheel">
+    <visual>
+      <origin xyz="-0.065 0 0" rpy="0 0 1.57"/>
+      <geometry>
+        <mesh filename="package://robot_description/meshes/hub_wheel.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <!-- FIXED: rpy="0 1.570796 0" aligns cylinder symmetry axis with X-axis so it rolls as a true circle! -->
+      <origin xyz="0 0 0" rpy="0 1.570796 0"/>
+      <geometry>
+        <cylinder radius="0.065" length="0.038"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="1.0"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="0.00211" ixy="0.0" ixz="0.0" iyy="0.00118" iyz="0.0" izz="0.00118"/>
+    </inertial>
+  </link>
+
+  <joint name="left_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="left_wheel"/>
+    <origin xyz="0.09 0.135 0.065" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="10.0" velocity="10.0"/>
+  </joint>
+
+ 
+  <!-- RIGHT HUB WHEEL -->
+  <link name="right_wheel">
+    <visual>
+      <origin xyz="-0.065 0 0" rpy="0 0 1.57"/>
+      <geometry>
+        <mesh filename="package://robot_description/meshes/hub_wheel.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <!-- FIXED: rpy="0 1.570796 0" aligns cylinder symmetry axis with X-axis so it rolls as a true circle! -->
+      <origin xyz="0 0 0" rpy="1.57 0 0"/>
+      <geometry>
+        <cylinder radius="0.065" length="0.038"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="1.0"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="0.00211" ixy="0.0" ixz="0.0" iyy="0.00118" iyz="0.0" izz="0.00118"/>
+    </inertial>
+  </link>
+
+  <joint name="right_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="right_wheel"/>
+    <origin xyz="0.09 -0.135 0.065" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="10.0" velocity="10.0"/>
+  </joint>
+
+  <!-- WHEEL CONTACT DAMPING: Stops physics hopping and bouncing against ground plane -->
+  <gazebo reference="left_wheel">
+    <collision>
+      <surface>
+        <friction>
+          <ode>
+            <mu>1.0</mu>
+            <mu2>1.0</mu2>
+          </ode>
+        </friction>
+        <contact>
+          <ode>
+            <kp>10000000.0</kp>
+            <kd>1.0</kd>
+            <min_depth>0.001</min_depth>
+          </ode>
+        </contact>
+      </surface>
+    </collision>
+  </gazebo>
+
+  <gazebo reference="right_wheel">
+    <collision>
+      <surface>
+        <friction>
+          <ode>
+            <mu>1.0</mu>
+            <mu2>1.0</mu2>
+          </ode>
+        </friction>
+        <contact>
+          <ode>
+            <kp>10000000.0</kp>
+            <kd>1.0</kd>
+            <min_depth>0.001</min_depth>
+          </ode>
+        </contact>
+      </surface>
+    </collision>
+  </gazebo>
+
+  <!-- SENSORS: LIDAR (Ignition Compatible) -->
+  <link name="lidar_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry><cylinder radius="0.03" length="0.04"/></geometry>
+      <material name="red"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry><cylinder radius="0.03" length="0.04"/></geometry>
+    </collision>
+    <inertial>
+      <mass value="0.12"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="0.000043" ixy="0.0" ixz="0.0" iyy="0.000043" iyz="0.0" izz="0.000054"/>
+    </inertial>
+  </link>
+
+  <joint name="lidar_joint" type="fixed">
+    <parent link="chassis"/>
+    <child link="lidar_link"/>
+    <origin xyz="0 0 0.125" rpy="0 0 0"/>
+  </joint>
+
+  <gazebo reference="lidar_link">
+    <sensor name="lidar_sensor" type="gpu_lidar">
+      <always_on>true</always_on>
+      <visualize>false</visualize>
+      <update_rate>10</update_rate>
+      <topic>scan</topic>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>360</samples>
+            <resolution>1</resolution>
+            <min_angle>-3.14159</min_angle>
+            <max_angle>3.14159</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.15</min>
+          <max>12.0</max>
+          <resolution>0.01</resolution>
+        </range>
+      </ray>
+    </sensor>
+  </gazebo>
+
+  <!-- SENSORS: IMU -->
+  <link name="imu_link">
+    <visual>
+      <geometry><box size="0.02 0.02 0.01"/></geometry>
+      <material name="black"/>
+    </visual>
+    <inertial>
+      <mass value="0.05"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="0.000002" ixy="0.0" ixz="0.0" iyy="0.000002" iyz="0.0" izz="0.000003"/>
+    </inertial>
+  </link>
+
+  <joint name="imu_joint" type="fixed">
+    <parent link="chassis"/>
+    <child link="imu_link"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <!-- CONNECTING CHASSIS TO ARM -->
+  <joint name="chassis_to_arm_joint" type="fixed">
+    <parent link="chassis"/>
+    <child link="arm_base_link"/>
+    <origin xyz="0.1 0 0.22" rpy="0 0 -1.01"/> 
+  </joint>
+
+  <!-- ======================================================= -->
+  <!-- PART 2: ROBOT ARM & GRIPPER                             -->
+  <!-- ======================================================= -->
+  <link name="arm_base_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 2.65"/>
+      <geometry>
+        <mesh filename="package://robot_description/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 2.65"/>
+      <geometry>
+        <mesh filename="package://robot_description/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001"/>
+    </inertial>
+  </link>
+
+  <link name="link_1">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://robot_description/meshes/link_1.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://robot_description/meshes/link_1.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+      <origin xyz="0 0 0.03" rpy="0 0 0"/>
+      <inertia ixx="0.0005" ixy="0.0" ixz="0.0" iyy="0.0005" iyz="0.0" izz="0.0005"/>
+    </inertial>
+  </link>
+
+  <joint name="base_joint" type="revolute">
+    <parent link="arm_base_link"/>
+    <child link="link_1"/>
+    <origin xyz="0 0 0.0615" rpy="0 0 1.025"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-1.74533" upper="1.74533" effort="50.0" velocity="1.0"/>
+    <dynamics damping="5.0" friction="1.0"/>
+  </joint>
+
+  <link name="link_2">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://robot_description/meshes/link_2.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://robot_description/meshes/link_2.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+      <origin xyz="0 0 0.12" rpy="0 0 0"/>
+      <inertia ixx="0.0008" ixy="0.0" ixz="0.0" iyy="0.0008" iyz="0.0" izz="0.0003"/>
+    </inertial>
+  </link>
+
+  <joint name="joint_1" type="revolute">
+    <parent link="link_1"/>
+    <child link="link_2"/>
+    <origin xyz="0 0.0114 0.075" rpy="0 0 -1.5708"/>
+    <axis xyz="1 0 0"/>
+    <limit lower="-1.60" upper="0.70" effort="50.0" velocity="1.0"/>
+    <dynamics damping="5.0" friction="1.0"/>
+  </joint>
+
+  <link name="link_3">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://robot_description/meshes/link_3.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="blue"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://robot_description/meshes/link_3.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+      <origin xyz="0 0 0.12" rpy="0 0 0"/>
+      <inertia ixx="0.0005" ixy="0.0" ixz="0.0" iyy="0.0005" iyz="0.0" izz="0.0002"/>
+    </inertial>
+  </link>
+
+  <joint name="joint_2" type="revolute">
+    <parent link="link_2"/>
+    <child link="link_3"/>
+    <origin xyz="0.03 0 0.24" rpy="0 1.5708 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-1.23" upper="1.60" effort="50.0" velocity="1.0"/>
+    <dynamics damping="5.0" friction="1.0"/>
+  </joint>
+
+  <link name="link_4">
+    <visual>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+      <geometry>
+        <mesh filename="package://robot_description/meshes/link_4.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+      <geometry>
+        <mesh filename="package://robot_description/meshes/link_4.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+      <origin xyz="0 0 0.05" rpy="0 0 0"/>
+      <inertia ixx="0.0003" ixy="0.0" ixz="0.0" iyy="0.0003" iyz="0.0" izz="0.0001"/>
+    </inertial>
+  </link>
+
+  <joint name="joint_3" type="revolute">
+    <parent link="link_3"/>
+    <child link="link_4"/>
+    <origin xyz="0 0.24 -0.015" rpy="-1.5708 3.14159 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-1.54" upper="1.52" effort="30.0" velocity="1.0"/>
+    <dynamics damping="3.0" friction="0.5"/>
+  </joint>
+
+  <link name="link_5">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://robot_description/meshes/link_5.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="green"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://robot_description/meshes/link_5.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+      <origin xyz="0 0 0.04" rpy="0 0 0"/>
+      <inertia ixx="0.0002" ixy="0.0" ixz="0.0" iyy="0.0002" iyz="0.0" izz="0.0001"/>
+    </inertial>
+  </link>
+
+  <joint name="joint_4" type="revolute">
+    <parent link="link_4"/>
+    <child link="link_5"/>
+    <origin xyz="0 0 0.13" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-1.55" upper="3.14" effort="30.0" velocity="1.0"/>
+    <dynamics damping="3.0" friction="0.5"/>
+  </joint>
+
+  <!-- GRIPPER -->
+  <link name="gripper_base">
+    <visual>
+      <origin xyz="0 0 0.072405" rpy="1.5708 0 -1.5708"/>
+      <geometry>
+        <mesh filename="package://robot_description/meshes/gripper_base.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.072405" rpy="1.5708 0 -1.5708"/>
+      <geometry>
+        <mesh filename="package://robot_description/meshes/gripper_base.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+      <origin xyz="0 0 0.05" rpy="0 0 0"/>
+      <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001"/>
+    </inertial>
+  </link>
+
+  <joint name="gripper_mount" type="fixed">
+    <parent link="link_5"/>
+    <child link="gripper_base"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <!-- LEFT FINGER -->
+  <link name="left_finger">
+    <visual>
+      <origin xyz="0 0 0.0725" rpy="1.5708 0 1.5708"/>
+      <geometry>
+        <mesh filename="package://robot_description/meshes/finger.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.0725" rpy="1.5708 0 1.5708"/>
+      <geometry>
+        <mesh filename="package://robot_description/meshes/finger.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.03"/>
+      <origin xyz="0 0 0.05" rpy="0 0 0"/>
+      <inertia ixx="0.00001" ixy="0.0" ixz="0.0" iyy="0.00001" iyz="0.0" izz="0.00001"/>
+    </inertial>
+  </link>
+
+  <joint name="left_finger_joint" type="prismatic">
+    <parent link="gripper_base"/>
+    <child link="left_finger"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="0.0" upper="0.04" effort="20.0" velocity="0.05"/>
+  </joint>
+
+  <!-- RIGHT FINGER -->
+  <link name="right_finger">
+    <visual>
+      <origin xyz="0 0 0.0725" rpy="1.5708 0 1.5708"/>
+      <geometry>
+        <mesh filename="package://robot_description/meshes/finger.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.0725" rpy="1.5708 0 1.5708"/>
+      <geometry>
+        <mesh filename="package://robot_description/meshes/finger.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.03"/>
+      <origin xyz="0 0 0.05" rpy="0 0 0"/>
+      <inertia ixx="0.00001" ixy="0.0" ixz="0.0" iyy="0.00001" iyz="0.0" izz="0.00001"/>
+    </inertial>
+  </link>
+
+  <joint name="right_finger_joint" type="prismatic">
+    <parent link="gripper_base"/>
+    <child link="right_finger"/>
+    <origin xyz="0 0 0" rpy="0 0 3.14159"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="0.0" upper="0.04" effort="20.0" velocity="0.05"/>
+  </joint>
+
+
+
+
+  <!-- ======================================================= -->
+  <!-- INTEL REALSENSE D455 (Mounted directly to chassis)      -->
+  <!-- ======================================================= -->
+  <!-- Removed camera_bottom_screw_frame completely! -->
+  <joint name="intel_camera_mount_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="intel_camera_link"/>
+    <!-- Position: X = 0.15m forward, Y = 0.0 (center), Z = 926.2mm (0.9262m) -->
+    <origin xyz="-0.1 0.0475 0.955" rpy="0 0 0"/> 
+  </joint>
+
+  <link name="intel_camera_link">
+    <visual>
+      <!-- OFFICIAL D455 LENS ALIGNMENT: Snaps 3D model directly onto the lenses -->
+      <origin xyz="0.00465 -0.0475 0" rpy="1.570796 0 1.570796"/>
+      <geometry>
+        <mesh filename="package://robot_description/meshes/d455.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="aluminum">
+        <color rgba="0.5 0.5 0.5 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0087 -0.0475 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.026 0.124 0.029"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.072"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="0.00388" ixy="0.0" ixz="0.0" iyy="0.00049" iyz="0.0" izz="0.00388"/>
+    </inertial>
+  </link>
+
+  <!-- ======================================================= -->
+  <!-- 1. DEPTH SENSOR & OPTICAL FRAME (For 3D Point Clouds)   -->
+  <!-- ======================================================= -->
+  <!-- Depth sensor sits directly at the origin of intel_camera_link -->
+  <joint name="camera_depth_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <parent link="intel_camera_link"/>
+    <child link="camera_depth_frame"/>
+  </joint>
+  <link name="camera_depth_frame"/>
+
+  <!-- Optical rotation: Blue axis (+Z) points FORWARD out of the depth lens -->
+  <joint name="camera_depth_optical_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="-1.570796 0 -1.570796"/>
+    <parent link="camera_depth_frame"/>
+    <child link="camera_depth_optical_frame"/>
+  </joint>
+  <link name="camera_depth_optical_frame"/>
+
+  <!-- ======================================================= -->
+  <!-- 2. COLOR SENSOR & OPTICAL FRAME (For RGB Camera & YOLO) -->
+  <!-- ======================================================= -->
+  <!-- Color sensor is physically 59mm (-0.059m) to the side -->
+  <joint name="camera_color_joint" type="fixed">
+    <origin xyz="0 -0.059 0" rpy="0 0 0"/>
+    <parent link="intel_camera_link"/>
+    <child link="camera_color_frame"/>
+  </joint>
+  <link name="camera_color_frame"/>
+
+  <!-- Optical rotation: Blue axis (+Z) points FORWARD out of the RGB lens -->
+  <joint name="camera_color_optical_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="-1.570796 0 -1.570796"/>
+    <parent link="camera_color_frame"/>
+    <child link="camera_color_optical_frame"/>
+  </joint>
+  <link name="camera_color_optical_frame"/>
+
+
+
+  <!-- ======================================================= -->
+  <!-- GAZEBO IGNITION PLUGIN: INTEL REALSENSE D455 (RGB-D)    -->
+  <!-- ======================================================= -->
+  <gazebo reference="intel_camera_link">
+    <sensor type="rgbd_camera" name="intel_d455_camera">
+      <always_on>true</always_on>
+      <update_rate>30.0</update_rate>
+      <!-- Global topic prefix: /intel_d455/image, /intel_d455/depth_image, /intel_d455/points -->
+      <topic>/intel_d455</topic>
+      <camera>
+        <!-- Real D455 FOV ~87 degrees (1.518 rad) -->
+        <horizontal_fov>1.5184</horizontal_fov>
+        <image>
+          <width>640</width>
+          <height>480</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.20</near>
+          <far>10.0</far>
+        </clip>
+        <optical_frame_id>camera_color_optical_frame</optical_frame_id>
+      </camera>
+    </sensor>
+  </gazebo>
+
+  <!-- ======================================================= -->
+  <!-- DEPTH CAMERA: ORBBEC ASTRA EMBEDDED S (Ignition Native) -->
+  <!-- ======================================================= -->
+  <link name="camera_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry><box size="0.015 0.069 0.023"/></geometry>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry><box size="0.015 0.069 0.023"/></geometry>
+    </collision>
+    <inertial>
+      <mass value="0.035"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="0.00001" ixy="0.0" ixz="0.0" iyy="0.00001" iyz="0.0" izz="0.00001"/>
+    </inertial>
+  </link>
+
+  <joint name="camera_joint" type="fixed">
+    <parent link="gripper_base"/>
+    <child link="camera_link"/>
+    <origin xyz="0.078 0.006 0.070" rpy="0 -1.92 0"/>
+  </joint>
+
+  <link name="camera_optical_link"/>
+  <joint name="camera_optical_joint" type="fixed">
+    <parent link="camera_link"/>
+    <child link="camera_optical_link"/>
+    <origin xyz="0 0 0" rpy="-1.570796 0 -1.570796"/>
+  </joint>
+
+  
+
+
+  <!-- ======================================================= -->
+  <!-- DEPTH CAMERA: ORBBEC ASTRA EMBEDDED S (RGB + Depth)     -->
+  <!-- ======================================================= -->
+  <gazebo reference="camera_link">
+    <!-- 1. Changed type to "rgbd_camera" so it outputs RGB color AND Depth -->
+    <sensor type="rgbd_camera" name="orbbec_camera">
+      <always_on>true</always_on>
+      <update_rate>30.0</update_rate>
+      <!-- 2. Added leading slash so topic is global: /camera -->
+      <topic>/camera</topic>
+      <camera>
+        <horizontal_fov>1.18508</horizontal_fov>
+        <image>
+          <width>640</width>
+          <height>400</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.25</near>
+          <far>1.50</far>
+        </clip>
+        <optical_frame_id>camera_optical_link</optical_frame_id>
+      </camera>
+    </sensor>
+  </gazebo>
+
+  <!-- ======================================================= -->
+  <!-- ROS 2 CONTROL INTERFACE                                 -->
+  <!-- ======================================================= -->
+  <ros2_control name="IgnitionSystem" type="system">
+    <hardware>
+      <plugin>ign_ros2_control/IgnitionSystem</plugin>
+    </hardware>
+    <joint name="base_joint">
+      <command_interface name="position"/>
+      <state_interface name="position"><param name="initial_value">0.0</param></state_interface>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="joint_1">
+      <command_interface name="position"/>
+      <state_interface name="position"><param name="initial_value">0.0</param></state_interface>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="joint_2">
+      <command_interface name="position"/>
+      <state_interface name="position"><param name="initial_value">-0.7853</param></state_interface>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="joint_3">
+      <command_interface name="position"/>
+      <state_interface name="position"><param name="initial_value">-0.5240</param></state_interface>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="joint_4">
+      <command_interface name="position"/>
+      <state_interface name="position"><param name="initial_value">0.0</param></state_interface>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="left_finger_joint">
+      <command_interface name="position"/>
+      <state_interface name="position"><param name="initial_value">0.0</param></state_interface>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <!-- Treat right finger as a real commandable joint in Gazebo -->
+    <joint name="right_finger_joint">
+      <command_interface name="position"/>
+      <state_interface name="position"><param name="initial_value">0.0</param></state_interface>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="left_wheel_joint">
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="right_wheel_joint">
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+  </ros2_control>
+
+  <!-- ======================================================= -->
+  <!-- IGNITION DIFFERENTIAL DRIVE PLUGIN                      -->
+  <!-- ======================================================= -->
+  <gazebo>
+    <plugin filename="ignition-gazebo-diff-drive-system" name="ignition::gazebo::systems::DiffDrive">
+      <left_joint>left_wheel_joint</left_joint>
+      <right_joint>right_wheel_joint</right_joint>
+      <wheel_separation>0.26</wheel_separation>
+      <wheel_radius>0.065</wheel_radius>
+      <max_linear_acceleration>2.0</max_linear_acceleration>
+      <topic>cmd_vel</topic>
+      <odom_topic>odom</odom_topic>
+      <tf_topic>tf</tf_topic>
+      <frame_id>odom</frame_id>
+      <child_frame_id>base_footprint</child_frame_id>
+    </plugin>
+  </gazebo>
+
+  <!-- Ignition Gazebo Joint State Publisher -->
+  <gazebo>
+    <plugin filename="ignition-gazebo-joint-state-publisher-system" name="ignition::gazebo::systems::JointStatePublisher">
+      <topic>joint_states</topic>
+    </plugin>
+  </gazebo>
+
+  <gazebo>
+    <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
+      <parameters>$(find osca_moveit)/config/ros2_controllers.yaml</parameters>
+      <position_proportional_gain>50.0</position_proportional_gain>
+    </plugin>
+  </gazebo>
+
+</robot>

@@ -1,0 +1,213 @@
+<?xml version="1.0" ?>
+<sdf version="1.8">
+  <world name="room_world">
+
+    <!-- Physics Engine -->
+    <physics name="1ms" type="ignored">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+
+    <!-- Ignition Gazebo 6 (Fortress) Plugins -->
+    <plugin filename="ignition-gazebo-physics-system" name="ignition::gazebo::systems::Physics"/>
+    <plugin filename="ignition-gazebo-user-commands-system" name="ignition::gazebo::systems::UserCommands"/>
+    <plugin filename="ignition-gazebo-scene-broadcaster-system" name="ignition::gazebo::systems::SceneBroadcaster"/>
+    <plugin filename="ignition-gazebo-sensors-system" name="ignition::gazebo::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+
+    <!-- Directional Sunlight -->
+    <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.85 0.85 0.85 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <direction>-0.5 0.2 -0.9</direction>
+    </light>
+
+    <!-- Ground Plane -->
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="ground_link">
+        <collision name="ground_col">
+          <geometry><plane><normal>0 0 1</normal><size>30 30</size></plane></geometry>
+        </collision>
+        <visual name="ground_vis">
+          <geometry><plane><normal>0 0 1</normal><size>30 30</size></plane></geometry>
+          <material>
+            <ambient>0.8 0.8 0.8 1</ambient>
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ======================================================= -->
+    <!-- ENCLOSED WALLS & ROOMS WITH 90CM (0.9M) DOORWAYS        -->
+    <!-- ======================================================= -->
+    <model name="building_layout">
+      <static>true</static>
+      <link name="walls">
+
+        <!-- Default Wall Visual Material: Light Grey -->
+        <material>
+          <ambient>0.7 0.7 0.7 1</ambient>
+          <diffuse>0.7 0.7 0.7 1</diffuse>
+        </material>
+
+        <!-- 1. EXTERIOR PERIMETER WALLS (8m x 8m, thickness 0.15m, height 1.5m) -->
+        <!-- North Wall -->
+        <collision name="outer_north_col">
+          <pose>0 4.0 0.75 0 0 0</pose>
+          <geometry><box><size>8.15 0.15 1.5</size></box></geometry>
+        </collision>
+        <visual name="outer_north_vis">
+          <pose>0 4.0 0.75 0 0 0</pose>
+          <geometry><box><size>8.15 0.15 1.5</size></box></geometry>
+        </visual>
+
+        <!-- South Wall -->
+        <collision name="outer_south_col">
+          <pose>0 -4.0 0.75 0 0 0</pose>
+          <geometry><box><size>8.15 0.15 1.5</size></box></geometry>
+        </collision>
+        <visual name="outer_south_vis">
+          <pose>0 -4.0 0.75 0 0 0</pose>
+          <geometry><box><size>8.15 0.15 1.5</size></box></geometry>
+        </visual>
+
+        <!-- West Wall -->
+        <collision name="outer_west_col">
+          <pose>-4.0 0 0.75 0 0 0</pose>
+          <geometry><box><size>0.15 8.15 1.5</size></box></geometry>
+        </collision>
+        <visual name="outer_west_vis">
+          <pose>-4.0 0 0.75 0 0 0</pose>
+          <geometry><box><size>0.15 8.15 1.5</size></box></geometry>
+        </visual>
+
+        <!-- East Wall -->
+        <collision name="outer_east_col">
+          <pose>4.0 0 0.75 0 0 0</pose>
+          <geometry><box><size>0.15 8.15 1.5</size></box></geometry>
+        </collision>
+        <visual name="outer_east_vis">
+          <pose>4.0 0 0.75 0 0 0</pose>
+          <geometry><box><size>0.15 8.15 1.5</size></box></geometry>
+        </visual>
+
+
+        <!-- 2. INTERIOR DIVIDER: SOUTH WALL (at Y = -1.0) with DOORWAY 1 (90 cm) -->
+        <!-- Segment Left: from X = -4.0 to X = -2.45 (length 1.55m) -->
+        <collision name="wall_s_left_col">
+          <pose>-3.225 -1.0 0.75 0 0 0</pose>
+          <geometry><box><size>1.55 0.15 1.5</size></box></geometry>
+        </collision>
+        <visual name="wall_s_left_vis">
+          <pose>-3.225 -1.0 0.75 0 0 0</pose>
+          <geometry><box><size>1.55 0.15 1.5</size></box></geometry>
+        </visual>
+
+        <!-- *** DOORWAY 1 GAP: from X = -2.45 to X = -1.55 (Exact Width = 0.90 m) *** -->
+
+        <!-- Segment Right: from X = -1.55 to X = 4.0 (length 5.55m) -->
+        <collision name="wall_s_right_col">
+          <pose>1.225 -1.0 0.75 0 0 0</pose>
+          <geometry><box><size>5.55 0.15 1.5</size></box></geometry>
+        </collision>
+        <visual name="wall_s_right_vis">
+          <pose>1.225 -1.0 0.75 0 0 0</pose>
+          <geometry><box><size>5.55 0.15 1.5</size></box></geometry>
+        </visual>
+
+
+        <!-- 3. INTERIOR DIVIDER: NORTH WALL (at Y = 1.0) with DOORWAY 2 (90 cm) -->
+        <!-- Segment Left: from X = -4.0 to X = 0.55 (length 4.55m) -->
+        <collision name="wall_n_left_col">
+          <pose>-1.725 1.0 0.75 0 0 0</pose>
+          <geometry><box><size>4.55 0.15 1.5</size></box></geometry>
+        </collision>
+        <visual name="wall_n_left_vis">
+          <pose>-1.725 1.0 0.75 0 0 0</pose>
+          <geometry><box><size>4.55 0.15 1.5</size></box></geometry>
+        </visual>
+
+        <!-- *** DOORWAY 2 GAP: from X = 0.55 to X = 1.45 (Exact Width = 0.90 m) *** -->
+
+        <!-- Segment Right: from X = 1.45 to X = 4.0 (length 2.55m) -->
+        <collision name="wall_n_right_col">
+          <pose>2.725 1.0 0.75 0 0 0</pose>
+          <geometry><box><size>2.55 0.15 1.5</size></box></geometry>
+        </collision>
+        <visual name="wall_n_right_vis">
+          <pose>2.725 1.0 0.75 0 0 0</pose>
+          <geometry><box><size>2.55 0.15 1.5</size></box></geometry>
+        </visual>
+
+
+        <!-- 4. VERTICAL PARTITION WALL (at X = 0.0, from Y = -4.0 to -1.0) with DOORWAY 3 (90 cm) -->
+        <!-- Segment South: from Y = -4.0 to Y = -2.95 (length 1.05m) -->
+        <collision name="wall_v_south_col">
+          <pose>0.0 -3.475 0.75 0 0 0</pose>
+          <geometry><box><size>0.15 1.05 1.5</size></box></geometry>
+        </collision>
+        <visual name="wall_v_south_vis">
+          <pose>0.0 -3.475 0.75 0 0 0</pose>
+          <geometry><box><size>0.15 1.05 1.5</size></box></geometry>
+        </visual>
+
+        <!-- *** DOORWAY 3 GAP: from Y = -2.95 to Y = -2.05 (Exact Width = 0.90 m) *** -->
+
+        <!-- Segment North: from Y = -2.05 to Y = -1.0 (length 1.05m) -->
+        <collision name="wall_v_north_col">
+          <pose>0.0 -1.525 0.75 0 0 0</pose>
+          <geometry><box><size>0.15 1.05 1.5</size></box></geometry>
+        </collision>
+        <visual name="wall_v_north_vis">
+          <pose>0.0 -1.525 0.75 0 0 0</pose>
+          <geometry><box><size>0.15 1.05 1.5</size></box></geometry>
+        </visual>
+
+      </link>
+    </model>
+
+    <!-- ======================================================= -->
+    <!-- TARGET TABLE & OBJECT (For Testing Orbbec Camera & Arm) -->
+    <!-- ======================================================= -->
+    <model name="inspection_table">
+      <static>true</static>
+      <pose>1.0 2.5 0.2 0 0 0</pose>
+      <link name="table_link">
+        <collision name="table_col">
+          <geometry><box><size>0.6 0.8 0.4</size></box></geometry>
+        </collision>
+        <visual name="table_vis">
+          <geometry><box><size>0.6 0.8 0.4</size></box></geometry>
+          <material>
+            <ambient>0.4 0.2 0.1 1</ambient>
+            <diffuse>0.4 0.2 0.1 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- A colored test cylinder on the table (at 0.45m height) -->
+    <model name="target_can">
+      <static>true</static>
+      <pose>1.0 2.5 0.46 0 0 0</pose>
+      <link name="can_link">
+        <collision name="can_col">
+          <geometry><cylinder><radius>0.04</radius><length>0.12</length></cylinder></geometry>
+        </collision>
+        <visual name="can_vis">
+          <geometry><cylinder><radius>0.04</radius><length>0.12</length></cylinder></geometry>
+          <material>
+            <ambient>0.1 0.8 0.2 1</ambient>
+            <diffuse>0.1 0.8 0.2 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+  </world>
+</sdf>

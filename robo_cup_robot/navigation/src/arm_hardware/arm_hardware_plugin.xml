@@ -1,0 +1,7 @@
+<library path="arm_hardware">
+  <class name="arm_hardware/ArmHardwareInterface"
+         type="arm_hardware::ArmHardwareInterface"
+         base_class_type="hardware_interface::SystemInterface">
+    <description>5-DOF stepper arm and gripper driven by an ESP32-S3 over USB serial.</description>
+  </class>
+</library>

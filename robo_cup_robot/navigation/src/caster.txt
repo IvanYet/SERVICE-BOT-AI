@@ -1,0 +1,51 @@
+ <!-- CASTERS -->
+  <link name="left_caster">
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry><sphere radius="0.025"/></geometry>
+    </collision>
+    <inertial>
+      <mass value="0.2"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="0.00005" ixy="0.0" ixz="0.0" iyy="0.00005" iyz="0.0" izz="0.00006"/>
+    </inertial>
+  </link>
+
+  <joint name="left_caster_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="left_caster"/>
+    <origin xyz="-0.1985 0.14 -0.04" rpy="0 0 0"/>
+  </joint>
+
+  <link name="right_caster">
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry><sphere radius="0.025"/></geometry>
+    </collision>
+    <inertial>
+      <mass value="0.2"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="0.00005" ixy="0.0" ixz="0.0" iyy="0.00005" iyz="0.0" izz="0.00006"/>
+    </inertial>
+  </link>
+
+  <joint name="right_caster_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="right_caster"/>
+    <origin xyz="-0.1985 -0.14 -0.04" rpy="0 0 0"/>
+  </joint>
+
+
+
+  <ros2_control name="real_arm" type="system">
+    <hardware>
+      <!-- BUG: This only moves fake joints in RAM, NOT in Gazebo! -->
+      <plugin>mock_components/GenericSystem</plugin>
+    </hardware>
+
+
+
+    <ros2_control name="IgnitionSystem" type="system">
+    <hardware>
+      <plugin>ign_ros2_control/IgnitionSystem</plugin>
+    </hardware>

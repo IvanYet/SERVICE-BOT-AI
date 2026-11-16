@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <world name="default">
+    <!-- Ground Plane -->
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+
+    <!-- Sun / Lighting -->
+    <include>
+      <uri>model://sun</uri>
+    </include>
+
+    <!-- LOAD YOUR BUILDING SAVED FROM BUILDING EDITOR -->
+    <include>
+      <uri>model://1</uri>
+      <pose>0 0 0 0 0 0</pose>
+    </include>
+
+  </world>
+</sdf>
