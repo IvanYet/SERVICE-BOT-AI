@@ -18,3 +18,6 @@ __pycache__/
 # Gazebo logs and temp files
 *.log
 /tmp/
+
+/venv/
+/.venv/
